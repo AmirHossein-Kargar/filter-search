@@ -1,5 +1,6 @@
 const searchInput = document.querySelector("#search");
 const productsDom = document.querySelector(".products-center");
+const btn = document.querySelectorAll(".btn");
 let allProductsData = [];
 const filters = {
   searchItems: "",
@@ -9,11 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .get("http://localhost:3000/items")
     .then((res) => {
       console.log(res.data);
-      
+
       allProductsData = res.data;
       renderProducts(res.data, filters);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err.message));
 
   // axios
   //   .get("http://localhost:3000/items")
@@ -48,6 +49,16 @@ function renderProducts(_products, _filters) {
     productsDom.appendChild(productsDiv);
   });
 }
+
+// ? filter btn based on groups
+btn.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const filter = e.target.dataset.filter;
+    console.log(filter);
+    filters.searchItems = filter;
+    renderProducts(allProductsData, filters)
+  });
+});
 
 searchInput.addEventListener("input", (e) => {
   console.log(e.target.value);
